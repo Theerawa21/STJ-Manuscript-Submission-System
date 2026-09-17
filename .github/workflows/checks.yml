@@ -13,3 +13,4 @@ jobs:
       - run: node tests/core.test.js
       - run: node tests/integration.test.js
       - run: node tests/github-transport.test.js
+      - run: node tests/journal-lifecycle.test.js

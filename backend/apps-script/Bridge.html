@@ -3,7 +3,7 @@
   'use strict';
   var channel = '<?= channel ?>';
   var origin = 'https://theerawa21.github.io';
-  var allowed = ['getPublicConfig','authorLogin','registerAuthor','authorLogout','getMyManuscripts','submitManuscriptFromWeb','trackManuscript','editorLogin','editorLogout','getDashboard','getSubmissionDetail','updateSubmissionStatus'];
+  var allowed = ['getPublicConfig','authorLogin','registerAuthor','authorLogout','getMyManuscripts','submitManuscriptFromWeb','trackManuscript','editorLogin','editorLogout','getDashboard','getSubmissionDetail','updateSubmissionStatus','setupJournal','listReviewers','saveReviewer','assignReviewers','cancelAssignment','exchangeReviewerToken','requestReviewerLogin','reviewerLogout','respondToInvitation','getReviewerDashboard','getReviewerTask','saveReviewDraft','submitReview','getDecisionContext','submitEditorialDecision','getAuthorWorkflow','submitRevision','submitAuthorProof','withdrawManuscript','getProductionDashboard','saveProofChecklist','uploadLayout','createAcceptanceLetter','listIssues','saveIssue','assignIssueArticle','validatePublication','publishIssue','getPublicJournal','getAuthorizedFile','getJournalLogs','flushJournalNotifications','listStaffRoles','grantStaffRole','getJournalOverview'];
   function reply(id,result){window.top.postMessage({protocol:'stj-bridge-v1',kind:'response',channel:channel,id:id,result:result},origin);}
   window.addEventListener('message',function(event){
     var m=event.data;

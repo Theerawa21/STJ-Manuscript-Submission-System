@@ -30,5 +30,5 @@ function validateSubmissionData_(data) {
 }
 
 function publicTrackingView_(submission, timeline) {
-  return {manuscriptId:String(submission.manuscript_id),title:String(submission.title_th),status:String(submission.status),statusLabel:STJ_STATUSES_[String(submission.status)] || String(submission.status),submittedAt:submission.submitted_at,publicNote:clean_(submission.public_note,2000),timeline:(timeline || []).map(function (row) { return {at:row.changed_at,status:String(row.to_status),label:STJ_STATUSES_[String(row.to_status)] || String(row.to_status),note:clean_(row.public_note,2000)}; })};
+  return {manuscriptId:String(submission.manuscript_id),title:String(submission.title_th),status:String(submission.status),statusLabel:(typeof journalStates_==='function'?journalStates_():STJ_STATUSES_)[String(submission.status)] || String(submission.status),submittedAt:submission.submitted_at,publicNote:clean_(submission.public_note,2000),timeline:(timeline || []).map(function (row) { return {at:row.changed_at,status:String(row.to_status),label:(typeof journalStates_==='function'?journalStates_():STJ_STATUSES_)[String(row.to_status)] || String(row.to_status),note:clean_(row.public_note,2000)}; })};
 }

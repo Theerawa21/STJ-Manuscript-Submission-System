@@ -113,3 +113,4 @@ assert.equal(sheets.get('SUBMISSIONS').data.length,beforeWeb+1);
 assert.ok(ok(call('getMyManuscripts',{token:owner.token})).some(r=>r.manuscriptId===fromWeb.manuscriptId));
 assert.equal(ok(call('getMyManuscripts',{token:other.token})).length,0);
 console.log('PASS integration: accounts, files, submission, ownership, tracking, editorial workflow, quota, rate limit and GitHub upload validation');
+module.exports={context,sheets,cache,properties,Folder,files,root,form,owner,other,blob,ss,ok,reject};

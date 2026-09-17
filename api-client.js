@@ -6,7 +6,7 @@
   var bridgeWindow = null;
   var bridgeOrigin = null;
   var pending = new Map();
-  var allowed = ['getPublicConfig','authorLogin','registerAuthor','authorLogout','getMyManuscripts','submitManuscriptFromWeb','trackManuscript','editorLogin','editorLogout','getDashboard','getSubmissionDetail','updateSubmissionStatus'];
+  var allowed = ['getPublicConfig','authorLogin','registerAuthor','authorLogout','getMyManuscripts','submitManuscriptFromWeb','trackManuscript','editorLogin','editorLogout','getDashboard','getSubmissionDetail','updateSubmissionStatus','setupJournal','listReviewers','saveReviewer','assignReviewers','cancelAssignment','exchangeReviewerToken','requestReviewerLogin','reviewerLogout','respondToInvitation','getReviewerDashboard','getReviewerTask','saveReviewDraft','submitReview','getDecisionContext','submitEditorialDecision','getAuthorWorkflow','submitRevision','submitAuthorProof','withdrawManuscript','getProductionDashboard','saveProofChecklist','uploadLayout','createAcceptanceLetter','listIssues','saveIssue','assignIssueArticle','validatePublication','publishIssue','getPublicJournal','getAuthorizedFile','getJournalLogs','flushJournalNotifications','listStaffRoles','grantStaffRole','getJournalOverview'];
   var resolveReady, rejectReady;
   var ready = new Promise(function (resolve, reject) { resolveReady = resolve; rejectReady = reject; });
   // Attach a rejection handler immediately, including when the user is only browsing.

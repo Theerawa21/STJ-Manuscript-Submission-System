@@ -17,3 +17,6 @@ GitHub Pages ใช้ branch `main` และโฟลเดอร์ `/` ก�
 ## ตั้งค่าฐานข้อมูล
 ใช้ Script Properties: `SPREADSHEET_ID`, `ROOT_FOLDER_ID`, `EDITORIAL_EMAIL`, `ADMIN_PASSWORD_HASH` และ `DATABASE_READY` ไม่ใส่รหัสผ่านหรือ token ลงใน repository
 Bridge อนุญาต origin `https://theerawa21.github.io` เท่านั้น และ endpoint ทุกตัวตรวจสอบสิทธิ์บน server ตามประเภทข้อมูล
+
+## ระบบวารสารครบกระบวนการ
+ดู [คู่มือ workflow](docs/journal-workflow.md) สำหรับ reviewer, double-blind, revision, decision, proofreading, author proof, issue/publication และการแจ้งเตือน

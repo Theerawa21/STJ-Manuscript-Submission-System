@@ -30,7 +30,3 @@ function loadMine(){run('getMyManuscripts',{token:authorToken},function(list){do
 function authorSignOut(){run('authorLogout',authorToken,function(){});authorToken='';sessionStorage.removeItem('stjAuthorToken');fail('accountError','');document.getElementById('accountForms').classList.remove('hidden');document.getElementById('myAccount').classList.add('hidden');}
 document.addEventListener('DOMContentLoaded',function(){if(authorToken){document.getElementById('accountForms').classList.add('hidden');document.getElementById('myAccount').classList.remove('hidden');}});
 </script></body></html>
-
-
-
-
