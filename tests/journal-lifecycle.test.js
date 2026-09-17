@@ -75,7 +75,13 @@ reject(call('saveProofChecklist',{...authorB,manuscriptId:before,version:2,check
 ok(call('saveProofChecklist',{...authorB,manuscriptId:id,version:2,checks:Array(10).fill(true),operationId:op()}));change('LAYOUT');
 const layout=ok(call('uploadLayout',{...edit,manuscriptId:id,wordFile:upload('final.docx','PK-final'),pdfFile:upload('final.pdf'),operationId:op()}));
 reject(call('submitAuthorProof',{...authorB,manuscriptId:id,version:layout.proofVersion,result:'CONFIRMED',operationId:op()}));
-ok(call('submitAuthorProof',{...author,manuscriptId:id,version:layout.proofVersion,result:'CONFIRMED',operationId:op()}));
+ok(call('submitAuthorProof',{...author,manuscriptId:id,version:layout.proofVersion,result:'CHANGES_REQUESTED',message:'Correct a table',operationId:op()}));
+reject(call('uploadLayout',{...edit,manuscriptId:id,wordFile:upload('final.docx','PK-final'),pdfFile:upload('final.pdf'),operationId:op()}));
+ok(call('saveProofChecklist',{...edit,manuscriptId:id,version:2,checks:Array(10).fill(true),operationId:op()}));
+const layout2=ok(call('uploadLayout',{...edit,manuscriptId:id,wordFile:upload('final.docx','PK-final'),pdfFile:upload('final.pdf'),operationId:op()}));
+assert.ok(layout2.proofVersion>layout.proofVersion);
+reject(call('submitAuthorProof',{...author,manuscriptId:id,version:layout.proofVersion,result:'CONFIRMED',operationId:op()}));
+ok(call('submitAuthorProof',{...author,manuscriptId:id,version:layout2.proofVersion,result:'CONFIRMED',operationId:op()}));
 const issue=ok(call('saveIssue',{...edit,data:{volume:1,issue_number:1,month:'มกราคม',year_be:2570,publication_date:'2026-01-01'},operationId:op()})).issueId;
 reject(call('publishIssue',{...edit,issueId:issue,operationId:op()}));
 ok(call('assignIssueArticle',{...edit,issueId:issue,manuscriptId:id,pageStart:1,pageEnd:10,sequence:1,operationId:op()}));
@@ -89,7 +95,21 @@ const wrongSignature=upload('fake.pdf','not pdf');assert.throws(()=>c.jSaveFile_
 c.processJournalJobs_();const sentCount=sent.length;c.processJournalJobs_();assert.equal(sent.length,sentCount);
 assert.ok(c.jRows_('AUDIT_LOG').length>20);assert.ok(c.jRows_('NOTIFICATIONS').every(n=>!n.body.includes(raw1)));
 reject(call('withdrawManuscript',{...edit,manuscriptId:id,reason:'test',operationId:op()}));
+const r4=ok(call('saveReviewer',{...edit,operationId:op(),data:{name:'Third reviewer',email:'third@example.invalid',active:true}})).reviewerId;
+const id2=ok(call('submitManuscript',{...form(),word_file:blob(Buffer.from('PK-word'),'application/vnd.openxmlformats-officedocument.wordprocessingml.document','initial.docx'),pdf_file:blob(Buffer.from('%PDF-initial'),'application/pdf','initial.pdf')})).manuscriptId;
+for(const status of ['DOCUMENT_CHECK','SCREENING'])ok(call('updateSubmissionStatus',{...edit,manuscriptId:id2,status,operationId:op()}));
+const three=ok(call('assignReviewers',{...assignment,manuscriptId:id2,reviewerIds:[r1,r2,r4],dueAt:new Date(Date.now()+3*86400000).toISOString(),operationId:op()}));
+assert.equal(ok(call('getDecisionContext',{...edit,manuscriptId:id2})).progress,'0/3');
+for(const [token,assignmentId] of [[t1,three.assignments[0]],[t2,three.assignments[1]]])ok(call('respondToInvitation',{token,assignmentId,response:'Accepted',operationId:op()}));
+c.processJournalJobs_();const reminderCount=c.jRows_('REMINDER_LOG').length;assert.equal(reminderCount,2);assert.ok(c.jRows_('REMINDER_LOG').every(r=>r.queued_at&&r.sent_at));c.processJournalJobs_();assert.equal(c.jRows_('REMINDER_LOG').length,reminderCount);
+const inactiveToken=c.jToken_(r4,three.assignments[2],'INVITATION');
+ok(call('saveReviewer',{...edit,operationId:op(),data:{reviewer_id:r4,name:'Third reviewer',email:'third@example.invalid',active:false}}));
+reject(call('exchangeReviewerToken',{invitationToken:inactiveToken}));
+ok(call('grantStaffRole',{...edit,userId:staffUid,role:'EDITOR',operationId:op()}));
+reject(call('grantStaffRole',{...authorB,userId:staffUid,role:'ADMIN',operationId:op()}));
+reject(call('submitEditorialDecision',{...edit,manuscriptId:id2,decision:'ACCEPT',message:'Should not accept early',operationId:op()}));
 console.log('PASS full journal lifecycle: backup/restriction, legacy schema, two blind reviews, confidentiality, revision versions, acceptance, named proofreader, proof, issue, publication, private downloads, audit and email dedupe');
+module.exports={c,editor,owner,id,t1,task,pub};
 
 
 

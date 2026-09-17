@@ -100,12 +100,13 @@ assert.match(call('authorLogin',{username:'qa_missing',password:'wrong'}).error,
 context.Utilities.base64Decode=value=>Array.from(Buffer.from(value,'base64'));
 context.Utilities.newBlob=(bytes,mime,name)=>blob(name,bytes.length);
 vm.runInContext(fs.readFileSync('backend/apps-script/WebSubmission.gs','utf8'),context);
-const webForm=()=>({...form(),word_file:{name:'qa.docx',base64:Buffer.from('word').toString('base64')},pdf_file:{name:'qa.pdf',base64:Buffer.from('pdf').toString('base64')}});
+const webForm=()=>({...form(),word_file:{name:'qa.docx',base64:Buffer.from('PK-word').toString('base64')},pdf_file:{name:'qa.pdf',base64:Buffer.from('%PDF-test').toString('base64')}});
 const beforeWeb=sheets.get('SUBMISSIONS').data.length;
 reject(call('submitManuscriptFromWeb',{...webForm(),author_token:'invalid'}));
 reject(call('submitManuscriptFromWeb',{...webForm(),word_file:{name:'bad.exe',base64:'YQ=='}}));
 reject(call('submitManuscriptFromWeb',{...webForm(),pdf_file:{name:'qa.pdf',base64:'%%%='}}));
 reject(call('submitManuscriptFromWeb',{...webForm(),pdf_file:null}));
+reject(call('submitManuscriptFromWeb',{...webForm(),pdf_file:{name:'qa.pdf',base64:Buffer.from('not pdf').toString('base64')}}));
 reject(call('submitManuscriptFromWeb',{...webForm(),word_file:{name:'qa.docx',base64:'a'.repeat(20971524)}}));
 assert.equal(sheets.get('SUBMISSIONS').data.length,beforeWeb);
 const fromWeb=ok(call('submitManuscriptFromWeb',webForm()));

@@ -12,6 +12,8 @@ function submitManuscriptFromWeb(form){
       if(typeof file.base64!=='string'||file.base64.length>20971520||!file.base64.length||file.base64.length%4!==0||!/^[A-Za-z0-9+/]*={0,2}$/.test(file.base64))throw userError_('ข้อมูลไฟล์ไม่ถูกต้องหรือมีขนาดเกิน 15 MB');
       var bytes=Utilities.base64Decode(file.base64);
       if(!bytes.length||bytes.length>15*1024*1024)throw userError_('ไฟล์มีขนาดเกิน 15 MB');
+      var ext=file.name.split('.').pop().toLowerCase(),head=bytes.slice(0,5).map(function(b){return String.fromCharCode((b+256)%256);}).join('');
+      if(ext==='pdf'&&head!=='%PDF-'||ext==='docx'&&head.slice(0,2)!=='PK'||ext==='doc'&&(bytes[0]+256)%256!==208)throw userError_('เนื้อหาไฟล์ไม่ตรงกับชนิดไฟล์');
       converted[key]=Utilities.newBlob(bytes,'application/octet-stream',file.name);
     });
     var result=submitManuscript(converted);
