@@ -14,3 +14,8 @@ function processJournalJobs_(){
   }finally{lock.releaseLock();}
 }
 function flushJournalNotifications(q){return response_(function(){requireEditor_(q.token);jReady_();processJournalJobs_();return {message:'ประมวลผลคิวแล้ว กรุณาตรวจประวัติการแจ้งเตือน'};});}
+
+
+// Run once from the project editor to grant the trigger-management scope.
+// This reads trigger metadata and does not dispatch messages or create a trigger.
+function authorizeJournalAutomation(){return ScriptApp.getProjectTriggers().length;}
