@@ -1,18 +1,19 @@
-# เว็บไซต์วารสารวิชาการและนวัตกรรมเซนต์เทเรซา
+# Saint Theresa Journal
 
-หน้าเว็บไซต์สำหรับ GitHub Pages ใช้ HTML/CSS และฟอนต์ Sarabun รองรับมือถือ
+เว็บไซต์และหน้าระบบทั้งหมดเผยแพร่ผ่าน GitHub Pages:
+https://theerawa21.github.io/STJ-Manuscript-Submission-System/
 
-- หน้าเว็บไซต์: `index.html`
-- รูปแบบและการแสดงผล: `styles.css`
-- โลโก้โรงเรียน: `assets/school-logo.png`
-- Template บทความทั้ง 4 ประเภท: `downloads/STJ-Article-Templates.docx`
+- `index.html`: หน้าแรก ข้อมูลวารสาร และดาวน์โหลด Template
+- `system.html`: สมัครสมาชิก เข้าสู่ระบบ ส่งบทความ ติดตามสถานะ และกองบรรณาธิการ
+- `api-client.js`: เชื่อมต่อฐานข้อมูลผ่าน iframe และ postMessage ที่ตรวจสอบ origin/channel
+- `backend/apps-script`: โค้ดบริการข้อมูลที่ใช้ Google Sheets และ Drive เดิม
+- `downloads`: Template บทความ 4 ประเภท
 
-ปุ่มส่งบทความ ติดตามสถานะ และกองบรรณาธิการเปิดระบบ Google Apps Script เดิม ผู้ใช้เลือกเมนูที่ต้องการในระบบนั้น ข้อมูลบัญชี บทความ และไฟล์ต้นฉบับยังบันทึกใน Google Sheets/Drive
+GitHub Pages ให้บริการไฟล์เว็บไซต์แบบ static จึงใช้ Apps Script สำหรับบัญชีผู้ใช้ การจัดเก็บไฟล์ และสิทธิ์เข้าถึงข้อมูล โดยไม่ต้องเปลี่ยนหน้าออกจากเว็บไซต์ GitHub Pages
 
-## GitHub Pages
+## เผยแพร่
+GitHub Pages ใช้ branch `main` และโฟลเดอร์ `/` การ push จะเผยแพร่หน้าเว็บ ส่วนการปรับ backend ต้อง deploy Apps Script เป็น version ใหม่ด้วย deployment ID เดิมด้วย
 
-ตั้งค่า Settings → Pages → Deploy from a branch → `main` → `/ (root)`
-
-เว็บไซต์: https://theerawa21.github.io/STJ-Manuscript-Submission-System/
-
-แก้ไฟล์บน `main` แล้ว GitHub Pages จะเผยแพร่ฉบับใหม่อัตโนมัติ
+## ตั้งค่าฐานข้อมูล
+ใช้ Script Properties: `SPREADSHEET_ID`, `ROOT_FOLDER_ID`, `EDITORIAL_EMAIL`, `ADMIN_PASSWORD_HASH` และ `DATABASE_READY` ไม่ใส่รหัสผ่านหรือ token ลงใน repository
+Bridge อนุญาต origin `https://theerawa21.github.io` เท่านั้น และ endpoint ทุกตัวตรวจสอบสิทธิ์บน server ตามประเภทข้อมูล
