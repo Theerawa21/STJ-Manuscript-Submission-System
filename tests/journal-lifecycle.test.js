@@ -101,6 +101,8 @@ for(const status of ['DOCUMENT_CHECK','SCREENING'])ok(call('updateSubmissionStat
 const three=ok(call('assignReviewers',{...assignment,manuscriptId:id2,reviewerIds:[r1,r2,r4],dueAt:new Date(Date.now()+3*86400000).toISOString(),operationId:op()}));
 assert.equal(ok(call('getDecisionContext',{...edit,manuscriptId:id2})).progress,'0/3');
 for(const [token,assignmentId] of [[t1,three.assignments[0]],[t2,three.assignments[1]]])ok(call('respondToInvitation',{token,assignmentId,response:'Accepted',operationId:op()}));
+// Google Sheets auto-converts yyyy-MM-dd cells to Date objects.
+const originalAppend=c.jAppend_;c.jAppend_=(name,obj)=>{originalAppend(name,obj);if(name==='REMINDER_LOG')sheets.get(name).data.at(-1)[2]=new Date(obj.due_date+'T00:00:00Z');};
 c.processJournalJobs_();const reminderCount=c.jRows_('REMINDER_LOG').length;assert.equal(reminderCount,2);assert.ok(c.jRows_('REMINDER_LOG').every(r=>r.queued_at&&r.sent_at));c.processJournalJobs_();assert.equal(c.jRows_('REMINDER_LOG').length,reminderCount);
 const inactiveToken=c.jToken_(r4,three.assignments[2],'INVITATION');
 ok(call('saveReviewer',{...edit,operationId:op(),data:{reviewer_id:r4,name:'Third reviewer',email:'third@example.invalid',active:false}}));
